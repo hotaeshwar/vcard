@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Share2, Phone, Globe, Building2, QrCode, Edit3, X, MessageCircle } from 'lucide-react';
+import { Share2, Phone, Globe, Building2, QrCode, Edit3, X, MessageCircle, Download } from 'lucide-react';
 
 const InteractiveBusinessCard = () => {
   const [formData, setFormData] = useState({
@@ -27,41 +27,35 @@ const InteractiveBusinessCard = () => {
   const generateQRCode = () => {
     if (!qrCanvasRef.current) return;
     
-    const vCardData = `BEGIN:VCARD
-VERSION:3.0
-FN:${formData.name}
-ORG:${formData.business}
-TEL:${formData.phone}
-URL:${formData.website}
-END:VCARD`;
-
-    // Simple QR code simulation with canvas
     const canvas = qrCanvasRef.current;
     const ctx = canvas.getContext('2d');
     
     // Clear canvas
     ctx.fillStyle = 'white';
-    ctx.fillRect(0, 0, 120, 120);
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw a simple pattern to represent QR code
+    // Draw QR code pattern
     ctx.fillStyle = '#d4af37';
+    const cellSize = canvas.width / 12;
     for (let i = 0; i < 12; i++) {
       for (let j = 0; j < 12; j++) {
         if ((i + j) % 3 === 0) {
-          ctx.fillRect(i * 10, j * 10, 8, 8);
+          ctx.fillRect(i * cellSize, j * cellSize, cellSize - 1, cellSize - 1);
         }
       }
     }
     
     // Add corner squares
-    ctx.fillRect(0, 0, 30, 30);
-    ctx.fillRect(90, 0, 30, 30);
-    ctx.fillRect(0, 90, 30, 30);
+    const cornerSize = cellSize * 3;
+    ctx.fillRect(0, 0, cornerSize, cornerSize);
+    ctx.fillRect(canvas.width - cornerSize, 0, cornerSize, cornerSize);
+    ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
     
     ctx.fillStyle = 'white';
-    ctx.fillRect(5, 5, 20, 20);
-    ctx.fillRect(95, 5, 20, 20);
-    ctx.fillRect(5, 95, 20, 20);
+    const innerSize = cellSize;
+    ctx.fillRect(innerSize, innerSize, innerSize, innerSize);
+    ctx.fillRect(canvas.width - cornerSize + innerSize, innerSize, innerSize, innerSize);
+    ctx.fillRect(innerSize, canvas.height - cornerSize + innerSize, innerSize, innerSize);
   };
 
   useEffect(() => {
@@ -129,170 +123,171 @@ END:VCARD`;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 20px;
+      padding: ${isHorizontal ? '8px' : '12px'};
     }
     .business-card {
       background: #000000;
-      border: 3px solid #d4af37;
-      border-radius: 20px;
-      box-shadow: 0 0 40px rgba(212, 175, 55, 0.4), 0 0 80px rgba(212, 175, 55, 0.2);
+      border: 2px solid #d4af37;
+      border-radius: ${isHorizontal ? '12px' : '16px'};
+      box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
       overflow: hidden;
       width: 100%;
-      max-width: ${isHorizontal ? '800px' : '400px'};
-      animation: glow 3s ease-in-out infinite alternate;
+      max-width: ${isHorizontal ? '600px' : '300px'};
+      max-height: ${isHorizontal ? '350px' : '450px'};
       ${isHorizontal ? 'display: flex; align-items: stretch;' : ''}
-    }
-    @keyframes glow {
-      from { box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.2); }
-      to { box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), 0 0 80px rgba(212, 175, 55, 0.3); }
     }
     .header {
       background: linear-gradient(135deg, #d4af37, #f1c40f);
-      padding: 30px 20px;
+      padding: ${isHorizontal ? '15px' : '20px'};
       text-align: center;
-      ${isHorizontal ? 'flex: 0 0 320px; display: flex; flex-direction: column; justify-content: center;' : ''}
+      ${isHorizontal ? 'flex: 0 0 200px; display: flex; flex-direction: column; justify-content: center;' : ''}
     }
     .photo {
-      width: ${isHorizontal ? '120px' : '100px'};
-      height: ${isHorizontal ? '120px' : '100px'};
+      width: ${isHorizontal ? '70px' : '80px'};
+      height: ${isHorizontal ? '70px' : '80px'};
       border-radius: 50%;
-      margin: 0 auto 15px;
-      border: 4px solid #000000;
+      margin: 0 auto ${isHorizontal ? '8px' : '12px'};
+      border: 3px solid #000000;
       object-fit: cover;
       display: block;
-      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
     .name {
-      font-size: ${isHorizontal ? '28px' : '24px'};
+      font-size: ${isHorizontal ? '16px' : '18px'};
       font-weight: bold;
       color: #000000;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
+      line-height: 1.2;
     }
     .title {
       color: #000000;
-      font-size: ${isHorizontal ? '18px' : '16px'};
+      font-size: ${isHorizontal ? '12px' : '13px'};
       opacity: 0.8;
+      line-height: 1.2;
     }
     .content {
-      padding: 25px 20px;
+      padding: ${isHorizontal ? '12px 15px' : '16px'};
       background: #000000;
-      ${isHorizontal ? 'flex: 1; display: flex; flex-direction: column; justify-content: space-between;' : ''}
-    }
-    .contact-section {
-      ${isHorizontal ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;' : ''}
+      ${isHorizontal ? 'flex: 1; display: flex; flex-direction: column; justify-content: center;' : ''}
     }
     .contact-item {
       display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: ${isHorizontal ? '12px 0' : '10px 0'};
-      ${isHorizontal ? '' : 'border-bottom: 1px solid #333333;'}
+      align-items: flex-start;
+      gap: 10px;
+      padding: ${isHorizontal ? '6px 0' : '8px 0'};
       transition: all 0.3s ease;
+      ${isHorizontal ? '' : 'border-bottom: 1px solid #333333;'}
     }
     .contact-item:last-child { border-bottom: none; }
     .contact-item:hover {
       background-color: #1a1a1a;
-      padding-left: 8px;
-      border-radius: 8px;
+      padding-left: 6px;
+      border-radius: 6px;
     }
     .icon {
       background: linear-gradient(135deg, #d4af37, #f1c40f);
       color: #000000;
-      padding: 10px;
-      border-radius: 10px;
-      min-width: 40px;
-      height: 40px;
+      padding: ${isHorizontal ? '5px' : '6px'};
+      border-radius: 6px;
+      min-width: ${isHorizontal ? '24px' : '28px'};
+      height: ${isHorizontal ? '24px' : '28px'};
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: bold;
-      font-size: 16px;
+      flex-shrink: 0;
     }
     .contact-info {
       flex: 1;
+      min-width: 0;
     }
     .contact-label {
-      font-size: 12px;
+      font-size: ${isHorizontal ? '9px' : '10px'};
       color: #999999;
-      margin-bottom: 4px;
+      margin-bottom: 2px;
       text-transform: uppercase;
       font-weight: 600;
     }
     .contact-value {
       color: #d4af37;
-      font-size: ${isHorizontal ? '16px' : '14px'};
+      font-size: ${isHorizontal ? '11px' : '12px'};
       font-weight: 500;
       text-decoration: none;
       line-height: 1.3;
+      word-break: break-word;
     }
     .contact-value:hover { color: #f1c40f; }
     .business-text {
       color: #ffffff;
-      font-size: ${isHorizontal ? '15px' : '13px'};
-      line-height: 1.4;
+      font-size: ${isHorizontal ? '10px' : '11px'};
+      line-height: 1.3;
+      word-break: break-word;
     }
     .qr-section {
       background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
-      padding: 20px;
+      padding: ${isHorizontal ? '12px' : '16px'};
       text-align: center;
-      border-top: 2px solid #d4af37;
-      ${isHorizontal ? 'border-top: none; border-left: 2px solid #d4af37; flex: 0 0 200px; display: flex; flex-direction: column; justify-content: center;' : ''}
+      border-top: ${isHorizontal ? 'none' : '2px solid #d4af37'};
+      ${isHorizontal ? 'border-left: 2px solid #d4af37; flex: 0 0 140px; display: flex; flex-direction: column; justify-content: center;' : ''}
     }
     .qr-title {
-      font-size: 14px;
+      font-size: ${isHorizontal ? '10px' : '12px'};
       font-weight: bold;
       color: #d4af37;
-      margin-bottom: 15px;
+      margin-bottom: ${isHorizontal ? '6px' : '10px'};
     }
     .qr-container {
       background: white;
-      padding: 15px;
-      border-radius: 12px;
+      padding: ${isHorizontal ? '6px' : '10px'};
+      border-radius: ${isHorizontal ? '6px' : '8px'};
       display: inline-block;
-      margin-bottom: 15px;
+      margin-bottom: ${isHorizontal ? '6px' : '10px'};
     }
     .action-buttons {
-      ${isHorizontal ? 'display: flex; flex-direction: column; gap: 8px;' : 'display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px;'}
+      ${isHorizontal ? 'display: flex; flex-direction: column; gap: 4px;' : 'display: grid; grid-template-columns: 1fr 1fr; gap: 8px;'}
     }
     .btn {
       background: linear-gradient(135deg, #d4af37, #f1c40f);
       color: #000000;
       border: none;
-      padding: ${isHorizontal ? '8px 12px' : '10px 15px'};
-      border-radius: 8px;
+      padding: ${isHorizontal ? '4px 6px' : '8px 12px'};
+      border-radius: 4px;
       font-weight: bold;
-      font-size: ${isHorizontal ? '12px' : '13px'};
+      font-size: ${isHorizontal ? '9px' : '11px'};
       cursor: pointer;
-      transition: all 0.3s ease;
       text-decoration: none;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 5px;
+      gap: 2px;
+      white-space: nowrap;
     }
     .btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(212, 175, 55, 0.4);
+      transform: translateY(-1px);
+      box-shadow: 0 2px 6px rgba(212, 175, 55, 0.4);
     }
     .footer {
       text-align: center;
-      padding: 15px;
-      font-size: 12px;
+      padding: ${isHorizontal ? '8px' : '10px'};
+      font-size: ${isHorizontal ? '8px' : '10px'};
       color: #999999;
       background: #000000;
       ${isHorizontal ? 'position: absolute; bottom: 0; left: 0; right: 0;' : ''}
     }
     ${isHorizontal ? '.business-card { position: relative; }' : ''}
+    
     @media (max-width: 768px) {
       .business-card { 
-        ${isHorizontal ? 'flex-direction: column; max-width: 400px;' : 'max-width: 350px;'} 
+        ${isHorizontal ? 'flex-direction: column; max-width: 300px; max-height: none;' : 'max-width: 280px;'} 
       }
-      .header { ${isHorizontal ? 'flex: none;' : ''} }
-      .content { ${isHorizontal ? 'flex: none;' : 'padding: 20px 15px;'} }
-      .contact-section { ${isHorizontal ? 'grid-template-columns: 1fr;' : ''} }
-      .qr-section { ${isHorizontal ? 'flex: none; border-left: none; border-top: 2px solid #d4af37;' : ''} }
-      .action-buttons { ${isHorizontal ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 10px;' : ''} }
+      .header { ${isHorizontal ? 'flex: none; padding: 16px;' : 'padding: 16px;'} }
+      .content { ${isHorizontal ? 'flex: none; padding: 12px;' : 'padding: 12px;'} }
+      .qr-section { ${isHorizontal ? 'flex: none; border-left: none; border-top: 2px solid #d4af37; padding: 12px;' : ''} }
+      .action-buttons { ${isHorizontal ? 'display: grid; grid-template-columns: 1fr 1fr; gap: 6px;' : ''} }
+      .photo { width: 60px; height: 60px; }
+      .name { font-size: 14px; }
+      .title { font-size: 11px; }
     }
+    
     .lucide-icon {
       stroke: currentColor;
       fill: none;
@@ -314,7 +309,7 @@ END:VCARD`;
       <div class="contact-section">
         <div class="contact-item">
           <div class="icon">
-            <svg class="lucide-icon" width="20" height="20" viewBox="0 0 24 24">
+            <svg class="lucide-icon" width="14" height="14" viewBox="0 0 24 24">
               <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
             </svg>
           </div>
@@ -326,7 +321,7 @@ END:VCARD`;
         
         <div class="contact-item">
           <div class="icon">
-            <svg class="lucide-icon" width="20" height="20" viewBox="0 0 24 24">
+            <svg class="lucide-icon" width="14" height="14" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10"/>
               <line x1="2" y1="12" x2="22" y2="12"/>
               <path d="m4.93 6.93 14.14 14.14"/>
@@ -339,9 +334,9 @@ END:VCARD`;
           </div>
         </div>
         
-        <div class="contact-item" style="${isHorizontal ? 'grid-column: 1 / -1;' : ''}">
+        <div class="contact-item">
           <div class="icon">
-            <svg class="lucide-icon" width="20" height="20" viewBox="0 0 24 24">
+            <svg class="lucide-icon" width="14" height="14" viewBox="0 0 24 24">
               <path d="M3 21h18"/>
               <path d="M5 21V7l8-4v18"/>
               <path d="M19 21V11l-6-4"/>
@@ -355,58 +350,23 @@ END:VCARD`;
       </div>
     </div>
     
-    ${isHorizontal ? `
     <div class="qr-section">
       <div class="qr-title">Scan to Save</div>
       <div class="qr-container">
-        <canvas id="qr-code" width="100" height="100"></canvas>
+        <canvas id="qr-code" width="${isHorizontal ? '70' : '80'}" height="${isHorizontal ? '70' : '80'}"></canvas>
       </div>
       
       <div class="action-buttons">
         <button class="btn" onclick="saveContact()">
-          Save Contact
+          ${isHorizontal ? 'Save' : 'Save Contact'}
         </button>
         <a href="tel:${formData.phone}" class="btn">
-          Call Now
+          ${isHorizontal ? 'Call' : 'Call Now'}
         </a>
-        <a href="https://${formData.website}" target="_blank" class="btn">
-          Visit Site
-        </a>
+        ${isHorizontal ? '<a href="https://' + formData.website + '" target="_blank" class="btn">Visit</a>' : 
+        '<a href="https://' + formData.website + '" target="_blank" class="btn" style="grid-column: 1 / -1;">Visit Website</a>'}
       </div>
     </div>
-    ` : `
-    <div class="qr-section">
-      <div class="qr-title">Scan to Save Contact</div>
-      <div class="qr-container">
-        <canvas id="qr-code" width="120" height="120"></canvas>
-      </div>
-      
-      <div class="action-buttons">
-        <button class="btn" onclick="saveContact()">
-          <svg class="lucide-icon" width="16" height="16" viewBox="0 0 24 24" style="margin-right: 4px;">
-            <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/>
-            <circle cx="12" cy="7" r="4"/>
-          </svg>
-          Save Contact
-        </button>
-        <a href="tel:${formData.phone}" class="btn">
-          <svg class="lucide-icon" width="16" height="16" viewBox="0 0 24 24" style="margin-right: 4px;">
-            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
-          </svg>
-          Call Now
-        </a>
-        <a href="https://${formData.website}" target="_blank" class="btn" style="grid-column: 1 / -1;">
-          <svg class="lucide-icon" width="16" height="16" viewBox="0 0 24 24" style="margin-right: 4px;">
-            <circle cx="12" cy="12" r="10"/>
-            <line x1="2" y1="12" x2="22" y2="12"/>
-            <path d="m4.93 6.93 14.14 14.14"/>
-            <path d="M6.93 4.93 19.07 19.07"/>
-          </svg>
-          Visit Website
-        </a>
-      </div>
-    </div>
-    `}
     
     <div class="footer">
       Building India Digital
@@ -462,7 +422,7 @@ END:VCARD`;
       const blob = new Blob([cardHTML], { type: 'text/html' });
       const url = URL.createObjectURL(blob);
       window.open(url, '_blank');
-      showNotification(`${mode === 'horizontal' ? 'Horizontal' : 'Vertical'} business card opened!`, 'success');
+      showNotification(`${mode === 'horizontal' ? 'Horizontal' : 'Vertical'} business card created!`, 'success');
 
     } catch (err) {
       console.error('Error creating business card:', err);
@@ -472,19 +432,32 @@ END:VCARD`;
 
   const shareOnWhatsApp = async () => {
     try {
-      // Create the horizontal card for WhatsApp sharing
+      // First create and open the horizontal card
       await createInteractiveCard('horizontal');
       
-      // Create WhatsApp message
-      const message = `Check out my digital business card! 🌟\n\n👤 ${formData.name}\n📱 ${formData.phone}\n🌐 ${formData.website}\n🏢 ${formData.business.split(',')[0]}\n\nScan the QR code to save my contact instantly!`;
+      // Then prepare WhatsApp message
+      const message = `🌟 *${formData.name}* - Digital Business Card\n\n📱 Phone: ${formData.phone}\n🌐 Website: ${formData.website}\n🏢 ${formData.business.split(',')[0]}\n\n💡 Scan the QR code to save my contact instantly!`;
       
       const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
-      window.open(whatsappUrl, '_blank');
       
-      showNotification('WhatsApp share opened!', 'success');
+      // Small delay to ensure the card opens first
+      setTimeout(() => {
+        window.open(whatsappUrl, '_blank');
+        showNotification('WhatsApp share opened! Share the horizontal card.', 'success');
+      }, 1000);
+      
     } catch (err) {
       console.error('Error sharing on WhatsApp:', err);
       showNotification('Error sharing on WhatsApp', 'error');
+    }
+  };
+
+  const downloadCard = async (mode) => {
+    try {
+      await createInteractiveCard(mode);
+      showNotification(`${mode === 'horizontal' ? 'Horizontal' : 'Vertical'} card downloaded!`, 'success');
+    } catch (err) {
+      showNotification('Error downloading card', 'error');
     }
   };
 
@@ -554,7 +527,7 @@ END:VCARD`;
                 color: '#d4af37',
                 margin: 0
               }}>
-                <span>Edit Business Card</span>
+                Edit Business Card
               </h2>
               <button 
                 onClick={() => setIsEditing(false)}
@@ -583,7 +556,7 @@ END:VCARD`;
                 color: '#d4af37',
                 marginBottom: '8px'
               }}>
-                <span>Profile Photo</span>
+                Profile Photo
               </label>
               <input
                 type="file"
@@ -610,7 +583,7 @@ END:VCARD`;
                 color: '#d4af37',
                 marginBottom: '8px'
               }}>
-                <span>Name</span>
+                Name
               </label>
               <input
                 type="text"
@@ -637,7 +610,7 @@ END:VCARD`;
                 color: '#d4af37',
                 marginBottom: '8px'
               }}>
-                <span>Title</span>
+                Title
               </label>
               <input
                 type="text"
@@ -665,7 +638,7 @@ END:VCARD`;
                 color: '#d4af37',
                 marginBottom: '8px'
               }}>
-                <span>Phone</span>
+                Phone
               </label>
               <input
                 type="tel"
@@ -692,7 +665,7 @@ END:VCARD`;
                 color: '#d4af37',
                 marginBottom: '8px'
               }}>
-                <span>Website</span>
+                Website
               </label>
               <input
                 type="text"
@@ -719,7 +692,7 @@ END:VCARD`;
                 color: '#d4af37',
                 marginBottom: '8px'
               }}>
-                <span>Business (comma separated)</span>
+                Business (comma separated)
               </label>
               <textarea
                 value={formData.business}
@@ -742,26 +715,27 @@ END:VCARD`;
       )}
 
       {/* Business Card Display */}
-      <div style={{ width: '100%', maxWidth: viewMode === 'horizontal' ? '800px' : '384px', margin: '0 auto' }}>
+      <div style={{ width: '100%', maxWidth: viewMode === 'horizontal' ? '600px' : '300px', margin: '0 auto' }}>
         <div 
           style={{
             backgroundColor: '#000000',
-            border: '1px solid #d4af37',
+            border: '2px solid #d4af37',
             borderRadius: '16px',
-            boxShadow: '0 0 30px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1)',
+            boxShadow: '0 0 30px rgba(212, 175, 55, 0.4), 0 0 60px rgba(212, 175, 55, 0.2)',
             overflow: 'hidden',
             animation: 'glow 2s ease-in-out infinite alternate',
             display: viewMode === 'horizontal' ? 'flex' : 'block',
-            alignItems: viewMode === 'horizontal' ? 'stretch' : 'normal'
+            alignItems: viewMode === 'horizontal' ? 'stretch' : 'normal',
+            maxHeight: viewMode === 'horizontal' ? '350px' : '450px'
           }}
         >
           <style>{`
             @keyframes glow {
               from {
-                box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.2), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 0 20px rgba(212, 175, 55, 0.3), 0 0 40px rgba(212, 175, 55, 0.2);
               }
               to {
-                box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), 0 0 80px rgba(212, 175, 55, 0.3), 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+                box-shadow: 0 0 40px rgba(212, 175, 55, 0.5), 0 0 80px rgba(212, 175, 55, 0.3);
               }
             }
           `}</style>
@@ -770,105 +744,113 @@ END:VCARD`;
           <div 
             style={{
               background: 'linear-gradient(to right, #d4af37, #f1c40f)',
-              padding: '24px',
+              padding: viewMode === 'horizontal' ? '15px' : '20px',
               textAlign: 'center',
               position: 'relative',
-              flex: viewMode === 'horizontal' ? '0 0 320px' : 'none',
+              flex: viewMode === 'horizontal' ? '0 0 200px' : 'none',
               display: viewMode === 'horizontal' ? 'flex' : 'block',
               flexDirection: 'column',
               justifyContent: 'center'
             }}
           >
-            <div style={{ marginBottom: '16px' }}>
+            <div style={{ marginBottom: viewMode === 'horizontal' ? '8px' : '12px' }}>
               <img 
                 src={formData.photo} 
                 alt="Profile" 
                 style={{
-                  width: viewMode === 'horizontal' ? '120px' : '112px',
-                  height: viewMode === 'horizontal' ? '120px' : '112px',
+                  width: viewMode === 'horizontal' ? '70px' : '80px',
+                  height: viewMode === 'horizontal' ? '70px' : '80px',
                   borderRadius: '50%',
                   margin: '0 auto',
-                  border: '4px solid #000000',
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  border: '3px solid #000000',
+                  boxShadow: '0 4px 8px rgba(0, 0, 0, 0.3)',
                   objectFit: 'cover',
                   display: 'block'
                 }}
               />
             </div>
             <h1 style={{
-              fontSize: viewMode === 'horizontal' ? '28px' : '20px',
+              fontSize: viewMode === 'horizontal' ? '16px' : '18px',
               fontWeight: 'bold',
               color: '#000000',
               marginBottom: '4px',
-              margin: 0
+              margin: 0,
+              lineHeight: 1.2
             }}>
-              <span>{formData.name}</span>
+              {formData.name}
             </h1>
             {formData.title && (
               <p style={{
-                fontSize: viewMode === 'horizontal' ? '18px' : '14px',
+                fontSize: viewMode === 'horizontal' ? '12px' : '13px',
                 color: '#000000',
                 margin: '4px 0 0 0',
-                opacity: 0.8
+                opacity: 0.8,
+                lineHeight: 1.2
               }}>
-                <span>{formData.title}</span>
+                {formData.title}
               </p>
             )}
           </div>
 
           {/* Contact Information Section */}
           <div style={{ 
-            padding: '24px',
+            padding: viewMode === 'horizontal' ? '12px 15px' : '16px',
             backgroundColor: '#000000',
             flex: viewMode === 'horizontal' ? '1' : 'none',
             display: viewMode === 'horizontal' ? 'flex' : 'block',
             flexDirection: 'column',
-            justifyContent: 'space-between'
+            justifyContent: 'center'
           }}>
             <div style={{ 
-              display: viewMode === 'horizontal' ? 'grid' : 'flex', 
-              gridTemplateColumns: viewMode === 'horizontal' ? '1fr 1fr' : 'none',
-              flexDirection: viewMode === 'horizontal' ? 'none' : 'column',
-              gap: viewMode === 'horizontal' ? '20px' : '12px',
-              marginBottom: viewMode === 'horizontal' ? '20px' : '0'
+              display: 'flex', 
+              flexDirection: 'column',
+              gap: viewMode === 'horizontal' ? '8px' : '10px'
             }}>
               {/* Phone */}
               <div style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: viewMode === 'horizontal' ? '12px 0' : '8px',
-                borderRadius: '8px',
+                alignItems: 'flex-start',
+                gap: '10px',
+                padding: viewMode === 'horizontal' ? '6px 0' : '8px 0',
+                borderRadius: '6px',
                 backgroundColor: 'transparent',
                 transition: 'background-color 0.2s ease',
                 borderBottom: viewMode === 'horizontal' ? 'none' : '1px solid #333333'
               }}>
                 <div style={{
                   backgroundColor: '#d4af37',
-                  padding: viewMode === 'horizontal' ? '10px' : '8px',
-                  borderRadius: viewMode === 'horizontal' ? '10px' : '8px'
+                  padding: viewMode === 'horizontal' ? '5px' : '6px',
+                  borderRadius: '6px',
+                  minWidth: viewMode === 'horizontal' ? '24px' : '28px',
+                  height: viewMode === 'horizontal' ? '24px' : '28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
-                  <Phone size={viewMode === 'horizontal' ? 20 : 16} color="#000000" />
+                  <Phone size={viewMode === 'horizontal' ? 12 : 14} color="#000000" />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
-                    fontSize: '12px',
+                    fontSize: viewMode === 'horizontal' ? '9px' : '10px',
                     color: '#999999',
-                    marginBottom: '3px',
-                    textTransform: 'uppercase'
+                    marginBottom: '2px',
+                    textTransform: 'uppercase',
+                    fontWeight: 600
                   }}>
-                    <span>Phone</span>
+                    Phone
                   </div>
                   <a 
                     href={`tel:${formData.phone}`} 
                     style={{
-                      fontSize: viewMode === 'horizontal' ? '16px' : '16px',
+                      fontSize: viewMode === 'horizontal' ? '11px' : '12px',
                       color: '#d4af37',
                       textDecoration: 'none',
-                      transition: 'color 0.2s ease'
+                      transition: 'color 0.2s ease',
+                      lineHeight: 1.3,
+                      wordBreak: 'break-word'
                     }}
                   >
-                    <span>{formData.phone}</span>
+                    {formData.phone}
                   </a>
                 </div>
               </div>
@@ -876,42 +858,50 @@ END:VCARD`;
               {/* Website */}
               <div style={{
                 display: 'flex',
-                alignItems: 'center',
-                gap: '12px',
-                padding: viewMode === 'horizontal' ? '12px 0' : '8px',
-                borderRadius: '8px',
+                alignItems: 'flex-start',
+                gap: '10px',
+                padding: viewMode === 'horizontal' ? '6px 0' : '8px 0',
+                borderRadius: '6px',
                 backgroundColor: 'transparent',
                 transition: 'background-color 0.2s ease',
                 borderBottom: viewMode === 'horizontal' ? 'none' : '1px solid #333333'
               }}>
                 <div style={{
                   backgroundColor: '#d4af37',
-                  padding: viewMode === 'horizontal' ? '10px' : '8px',
-                  borderRadius: viewMode === 'horizontal' ? '10px' : '8px'
+                  padding: viewMode === 'horizontal' ? '5px' : '6px',
+                  borderRadius: '6px',
+                  minWidth: viewMode === 'horizontal' ? '24px' : '28px',
+                  height: viewMode === 'horizontal' ? '24px' : '28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
-                  <Globe size={viewMode === 'horizontal' ? 20 : 16} color="#000000" />
+                  <Globe size={viewMode === 'horizontal' ? 12 : 14} color="#000000" />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
-                    fontSize: '12px',
+                    fontSize: viewMode === 'horizontal' ? '9px' : '10px',
                     color: '#999999',
-                    marginBottom: '3px',
-                    textTransform: 'uppercase'
+                    marginBottom: '2px',
+                    textTransform: 'uppercase',
+                    fontWeight: 600
                   }}>
-                    <span>Website</span>
+                    Website
                   </div>
                   <a 
                     href={`https://${formData.website}`} 
                     target="_blank" 
                     rel="noopener noreferrer"
                     style={{
-                      fontSize: viewMode === 'horizontal' ? '16px' : '16px',
+                      fontSize: viewMode === 'horizontal' ? '11px' : '12px',
                       color: '#d4af37',
                       textDecoration: 'underline',
-                      transition: 'color 0.2s ease'
+                      transition: 'color 0.2s ease',
+                      lineHeight: 1.3,
+                      wordBreak: 'break-word'
                     }}
                   >
-                    <span>{formData.website}</span>
+                    {formData.website}
                   </a>
                 </div>
               </div>
@@ -920,33 +910,39 @@ END:VCARD`;
               <div style={{
                 display: 'flex',
                 alignItems: 'flex-start',
-                gap: '12px',
-                padding: viewMode === 'horizontal' ? '12px 0' : '8px',
-                borderRadius: '8px',
+                gap: '10px',
+                padding: viewMode === 'horizontal' ? '6px 0' : '8px 0',
+                borderRadius: '6px',
                 backgroundColor: 'transparent',
-                transition: 'background-color 0.2s ease',
-                gridColumn: viewMode === 'horizontal' ? '1 / -1' : 'auto'
+                transition: 'background-color 0.2s ease'
               }}>
                 <div style={{
                   backgroundColor: '#d4af37',
-                  padding: viewMode === 'horizontal' ? '10px' : '8px',
-                  borderRadius: viewMode === 'horizontal' ? '10px' : '8px',
-                  marginTop: '4px'
+                  padding: viewMode === 'horizontal' ? '5px' : '6px',
+                  borderRadius: '6px',
+                  minWidth: viewMode === 'horizontal' ? '24px' : '28px',
+                  height: viewMode === 'horizontal' ? '24px' : '28px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
-                  <Building2 size={viewMode === 'horizontal' ? 20 : 16} color="#000000" />
+                  <Building2 size={viewMode === 'horizontal' ? 12 : 14} color="#000000" />
                 </div>
-                <div style={{ flex: 1 }}>
+                <div style={{ flex: 1, minWidth: 0 }}>
                   <div style={{
-                    fontSize: '12px',
+                    fontSize: viewMode === 'horizontal' ? '9px' : '10px',
                     color: '#999999',
-                    marginBottom: '3px',
-                    textTransform: 'uppercase'
+                    marginBottom: '2px',
+                    textTransform: 'uppercase',
+                    fontWeight: 600
                   }}>
-                    <span>Business</span>
+                    Business
                   </div>
                   <div style={{
-                    fontSize: viewMode === 'horizontal' ? '15px' : '14px',
-                    lineHeight: '1.5'
+                    fontSize: viewMode === 'horizontal' ? '10px' : '11px',
+                    lineHeight: 1.3,
+                    color: '#ffffff',
+                    wordBreak: 'break-word'
                   }}>
                     {formData.business.split(',').map((business, index) => (
                       <span 
@@ -955,10 +951,10 @@ END:VCARD`;
                           display: 'block', 
                           fontWeight: 'bold', 
                           color: index % 2 === 0 ? '#f1c40f' : '#d4af37',
-                          marginBottom: '2px'
+                          marginBottom: '1px'
                         }}
                       >
-                        <span>{business.trim()}</span>
+                        {business.trim()}
                       </span>
                     ))}
                   </div>
@@ -971,38 +967,38 @@ END:VCARD`;
           <div 
             style={{
               backgroundColor: '#1f2937',
-              padding: '24px',
+              padding: viewMode === 'horizontal' ? '12px' : '16px',
               textAlign: 'center',
-              borderTop: viewMode === 'horizontal' ? 'none' : '1px solid #d4af37',
+              borderTop: viewMode === 'horizontal' ? 'none' : '2px solid #d4af37',
               borderLeft: viewMode === 'horizontal' ? '2px solid #d4af37' : 'none',
-              flex: viewMode === 'horizontal' ? '0 0 200px' : 'none',
+              flex: viewMode === 'horizontal' ? '0 0 140px' : 'none',
               display: viewMode === 'horizontal' ? 'flex' : 'block',
               flexDirection: 'column',
               justifyContent: 'center'
             }}
           >
             <h3 style={{
-              fontSize: '14px',
+              fontSize: viewMode === 'horizontal' ? '10px' : '12px',
               fontWeight: 'bold',
               color: '#d4af37',
-              marginBottom: '12px',
+              marginBottom: viewMode === 'horizontal' ? '6px' : '10px',
               margin: 0
             }}>
-              <span>Scan to Save</span>
+              Scan to Save
             </h3>
             <div style={{
               backgroundColor: 'white',
-              padding: '12px',
-              borderRadius: '12px',
+              padding: viewMode === 'horizontal' ? '6px' : '10px',
+              borderRadius: viewMode === 'horizontal' ? '6px' : '8px',
               display: 'inline-block',
               boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
-              marginBottom: '16px'
+              marginBottom: viewMode === 'horizontal' ? '6px' : '10px'
             }}>
               <canvas 
                 ref={qrCanvasRef}
                 style={{
-                  width: viewMode === 'horizontal' ? '100px' : '112px',
-                  height: viewMode === 'horizontal' ? '100px' : '112px',
+                  width: viewMode === 'horizontal' ? '70px' : '80px',
+                  height: viewMode === 'horizontal' ? '70px' : '80px',
                   cursor: 'pointer',
                   display: 'block'
                 }}
@@ -1013,7 +1009,7 @@ END:VCARD`;
               display: viewMode === 'horizontal' ? 'flex' : 'grid',
               gridTemplateColumns: viewMode === 'horizontal' ? 'none' : '1fr 1fr',
               flexDirection: viewMode === 'horizontal' ? 'column' : 'none',
-              gap: viewMode === 'horizontal' ? '8px' : '12px'
+              gap: viewMode === 'horizontal' ? '4px' : '8px'
             }}>
               <button 
                 onClick={() => createInteractiveCard()}
@@ -1021,20 +1017,21 @@ END:VCARD`;
                   backgroundColor: '#d4af37',
                   color: '#000000',
                   border: 'none',
-                  padding: viewMode === 'horizontal' ? '8px 12px' : '12px 16px',
-                  borderRadius: '8px',
-                  fontSize: viewMode === 'horizontal' ? '12px' : '14px',
+                  padding: viewMode === 'horizontal' ? '4px 6px' : '8px 12px',
+                  borderRadius: '4px',
+                  fontSize: viewMode === 'horizontal' ? '9px' : '11px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px'
+                  gap: '2px',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                <Share2 size={16} />
-                <span>Share Card</span>
+                <Share2 size={viewMode === 'horizontal' ? 12 : 14} />
+                <span>{viewMode === 'horizontal' ? 'Share' : 'Share Card'}</span>
               </button>
               
               <button 
@@ -1043,31 +1040,61 @@ END:VCARD`;
                   backgroundColor: isEditing ? '#ef4444' : '#10b981',
                   color: '#ffffff',
                   border: 'none',
-                  padding: viewMode === 'horizontal' ? '8px 12px' : '12px 16px',
-                  borderRadius: '8px',
-                  fontSize: viewMode === 'horizontal' ? '12px' : '14px',
+                  padding: viewMode === 'horizontal' ? '4px 6px' : '8px 12px',
+                  borderRadius: '4px',
+                  fontSize: viewMode === 'horizontal' ? '9px' : '11px',
                   fontWeight: 'bold',
                   cursor: 'pointer',
                   transition: 'background-color 0.2s ease',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px'
+                  gap: '2px',
+                  whiteSpace: 'nowrap'
                 }}
               >
-                {isEditing ? <X size={16} /> : <Edit3 size={16} />}
+                {isEditing ? <X size={viewMode === 'horizontal' ? 12 : 14} /> : <Edit3 size={viewMode === 'horizontal' ? 12 : 14} />}
                 <span>{isEditing ? 'Close' : 'Edit'}</span>
               </button>
+              
+              {viewMode === 'vertical' && (
+                <a 
+                  href={`https://${formData.website}`} 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  style={{
+                    backgroundColor: '#d4af37',
+                    color: '#000000',
+                    border: 'none',
+                    padding: '8px 12px',
+                    borderRadius: '4px',
+                    fontSize: '11px',
+                    fontWeight: 'bold',
+                    cursor: 'pointer',
+                    transition: 'background-color 0.2s ease',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '2px',
+                    textDecoration: 'none',
+                    gridColumn: '1 / -1'
+                  }}
+                >
+                  <Globe size={14} />
+                  <span>Visit Website</span>
+                </a>
+              )}
             </div>
           </div>
         </div>
         
-        {/* Layout Toggle and WhatsApp Share */}
+        {/* Action Buttons */}
         <div style={{
           display: 'flex',
           gap: '12px',
           marginTop: '16px',
-          justifyContent: 'center'
+          justifyContent: 'center',
+          flexWrap: 'wrap'
         }}>
           <button 
             onClick={() => setViewMode(viewMode === 'vertical' ? 'horizontal' : 'vertical')}
@@ -1089,6 +1116,28 @@ END:VCARD`;
           >
             <QrCode size={16} />
             <span>{viewMode === 'vertical' ? 'Horizontal View' : 'Vertical View'}</span>
+          </button>
+          
+          <button 
+            onClick={() => downloadCard('horizontal')}
+            style={{
+              backgroundColor: '#6366f1',
+              color: '#ffffff',
+              border: 'none',
+              padding: '10px 16px',
+              borderRadius: '8px',
+              fontSize: '14px',
+              fontWeight: 'bold',
+              cursor: 'pointer',
+              transition: 'background-color 0.2s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '6px'
+            }}
+          >
+            <Download size={16} />
+            <span>Download Horizontal</span>
           </button>
           
           <button 
