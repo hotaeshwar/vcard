@@ -31,10 +31,10 @@ const InteractiveBusinessCard = () => {
     const ctx = canvas.getContext('2d');
     
     // Clear canvas
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#ffffff';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw QR code pattern - black
+    // Draw QR code pattern - BLACK
     ctx.fillStyle = '#000000';
     const cellSize = canvas.width / 12;
     for (let i = 0; i < 12; i++) {
@@ -46,12 +46,13 @@ const InteractiveBusinessCard = () => {
     }
     
     // Add corner squares
+    ctx.fillStyle = '#000000';
     const cornerSize = cellSize * 3;
     ctx.fillRect(0, 0, cornerSize, cornerSize);
     ctx.fillRect(canvas.width - cornerSize, 0, cornerSize, cornerSize);
     ctx.fillRect(0, canvas.height - cornerSize, cornerSize, cornerSize);
     
-    ctx.fillStyle = 'white';
+    ctx.fillStyle = '#ffffff';
     const innerSize = cellSize;
     ctx.fillRect(innerSize, innerSize, innerSize, innerSize);
     ctx.fillRect(canvas.width - cornerSize + innerSize, innerSize, innerSize, innerSize);
@@ -88,11 +89,13 @@ const InteractiveBusinessCard = () => {
   };
 
   const shareOnWhatsApp = () => {
-    const message = `🌟 *${formData.name}* - Digital Business Card\n\n📱 Phone: ${formData.phone}\n🌐 Website: ${formData.website}\n🏢 ${formData.business.split(',')[0]}\n\n💡 Scan the QR code to save my contact instantly!`;
+    // Create a compact text version for sharing
+    const businessList = formData.business.split(',').map(b => b.trim()).join('\n');
+    const message = `*${formData.name}*\n${formData.title}\n\n📱 ${formData.phone}\n🌐 ${formData.website}\n\n🏢 *Businesses:*\n${businessList}`;
     
     const whatsappUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
-    showNotification('WhatsApp opened! Switch to horizontal layout for better sharing.', 'success');
+    showNotification('Compact business card shared!', 'success');
   };
 
   const createInteractiveCard = () => {
@@ -101,6 +104,7 @@ const InteractiveBusinessCard = () => {
     const vCardData = `BEGIN:VCARD
 VERSION:3.0
 FN:${formData.name}
+TITLE:${formData.title}
 ORG:${formData.business}
 TEL:${formData.phone}
 URL:${formData.website}
@@ -122,23 +126,22 @@ END:VCARD`;
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      padding: '8px',
+      padding: '16px',
       flexDirection: 'column',
-      gap: '20px'
+      gap: '24px'
     }}>
       {notification && (
         <div 
           style={{
             position: 'fixed',
-            top: '16px',
-            right: '16px',
+            top: '20px',
+            right: '20px',
             padding: '12px 24px',
             borderRadius: '8px',
             color: 'white',
             zIndex: 50,
-            backgroundColor: notification.type === 'success' ? '#22c55e' : '#ef4444',
-            transform: 'translateX(0)',
-            transition: 'all 0.3s ease'
+            backgroundColor: notification.type === 'success' ? '#10b981' : '#ef4444',
+            boxShadow: '0 4px 6px rgba(0,0,0,0.1)'
           }}
         >
           {notification.message}
@@ -153,7 +156,7 @@ END:VCARD`;
           left: 0,
           right: 0,
           bottom: 0,
-          backgroundColor: 'rgba(0, 0, 0, 0.8)',
+          backgroundColor: 'rgba(0, 0, 0, 0.9)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -161,13 +164,13 @@ END:VCARD`;
           padding: '16px'
         }}>
           <div style={{
-            backgroundColor: '#1f2937',
-            border: '2px solid #000000',
+            backgroundColor: '#1a1a1a',
+            border: '2px solid #333',
             borderRadius: '16px',
             padding: '24px',
-            maxWidth: '500px',
+            maxWidth: '480px',
             width: '100%',
-            maxHeight: '90vh',
+            maxHeight: '85vh',
             overflowY: 'auto'
           }}>
             <div style={{
@@ -177,7 +180,7 @@ END:VCARD`;
               marginBottom: '20px'
             }}>
               <h2 style={{
-                fontSize: '18px',
+                fontSize: '20px',
                 fontWeight: 'bold',
                 color: '#ffffff',
                 margin: 0
@@ -187,7 +190,7 @@ END:VCARD`;
               <button 
                 onClick={() => setIsEditing(false)}
                 style={{
-                  backgroundColor: 'transparent',
+                  background: 'none',
                   border: 'none',
                   color: '#ffffff',
                   cursor: 'pointer',
@@ -198,161 +201,169 @@ END:VCARD`;
               </button>
             </div>
             
-            {/* Photo Upload */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#ffffff',
-                marginBottom: '8px'
-              }}>
-                Profile Photo
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handlePhotoChange}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid #000000',
-                  backgroundColor: '#000000',
-                  color: '#ffffff'
-                }}
-              />
-            </div>
-            
-            {/* Name Field */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#ffffff',
-                marginBottom: '8px'
-              }}>
-                Name
-              </label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid #000000',
-                  backgroundColor: '#000000',
-                  color: '#ffffff'
-                }}
-              />
-            </div>
-            
-            {/* Title Field */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#ffffff',
-                marginBottom: '8px'
-              }}>
-                Title
-              </label>
-              <input
-                type="text"
-                value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid #000000',
-                  backgroundColor: '#000000',
-                  color: '#ffffff'
-                }}
-              />
-            </div>
-            
-            {/* Phone Field */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#ffffff',
-                marginBottom: '8px'
-              }}>
-                Phone
-              </label>
-              <input
-                type="tel"
-                value={formData.phone}
-                onChange={(e) => handleInputChange('phone', e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid #000000',
-                  backgroundColor: '#000000',
-                  color: '#ffffff'
-                }}
-              />
-            </div>
-            
-            {/* Website Field */}
-            <div style={{ marginBottom: '16px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#ffffff',
-                marginBottom: '8px'
-              }}>
-                Website
-              </label>
-              <input
-                type="text"
-                value={formData.website}
-                onChange={(e) => handleInputChange('website', e.target.value)}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid #000000',
-                  backgroundColor: '#000000',
-                  color: '#ffffff'
-                }}
-              />
-            </div>
-            
-            {/* Business Field */}
-            <div style={{ marginBottom: '20px' }}>
-              <label style={{
-                display: 'block',
-                fontSize: '14px',
-                fontWeight: 'bold',
-                color: '#ffffff',
-                marginBottom: '8px'
-              }}>
-                Business
-              </label>
-              <textarea
-                value={formData.business}
-                onChange={(e) => handleInputChange('business', e.target.value)}
-                rows={3}
-                style={{
-                  width: '100%',
-                  padding: '8px',
-                  borderRadius: '8px',
-                  border: '1px solid #000000',
-                  backgroundColor: '#000000',
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              {/* Photo Upload */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
                   color: '#ffffff',
-                  resize: 'vertical'
-                }}
-              />
+                  marginBottom: '6px'
+                }}>
+                  Profile Photo
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoChange}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #333',
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              {/* Name Field */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  marginBottom: '6px'
+                }}>
+                  Name
+                </label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #333',
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              {/* Title Field */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  marginBottom: '6px'
+                }}>
+                  Title
+                </label>
+                <input
+                  type="text"
+                  value={formData.title}
+                  onChange={(e) => handleInputChange('title', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #333',
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              {/* Phone Field */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  marginBottom: '6px'
+                }}>
+                  Phone
+                </label>
+                <input
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #333',
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              {/* Website Field */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  marginBottom: '6px'
+                }}>
+                  Website
+                </label>
+                <input
+                  type="text"
+                  value={formData.website}
+                  onChange={(e) => handleInputChange('website', e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #333',
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontSize: '14px'
+                  }}
+                />
+              </div>
+              
+              {/* Business Field */}
+              <div>
+                <label style={{
+                  display: 'block',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  color: '#ffffff',
+                  marginBottom: '6px'
+                }}>
+                  Business (comma separated)
+                </label>
+                <textarea
+                  value={formData.business}
+                  onChange={(e) => handleInputChange('business', e.target.value)}
+                  rows={4}
+                  style={{
+                    width: '100%',
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1px solid #333',
+                    backgroundColor: '#000000',
+                    color: '#ffffff',
+                    fontSize: '14px',
+                    resize: 'vertical'
+                  }}
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -361,78 +372,60 @@ END:VCARD`;
       {/* Business Card Display */}
       <div style={{ 
         width: '100%', 
-        maxWidth: isHorizontal ? '700px' : '350px', 
-        margin: '0 auto',
-        transition: 'all 0.5s ease'
+        maxWidth: isHorizontal ? '700px' : '340px', 
+        margin: '0 auto'
       }}>
         <div 
           style={{
             backgroundColor: '#000000',
-            border: '3px solid #000000',
-            borderRadius: '20px',
-            boxShadow: '0 0 40px rgba(0, 0, 0, 0.4), 0 0 80px rgba(0, 0, 0, 0.2)',
+            border: '2px solid #333',
+            borderRadius: '16px',
+            boxShadow: '0 20px 30px -10px rgba(0,0,0,0.5)',
             overflow: 'hidden',
-            animation: 'glow 3s ease-in-out infinite alternate',
             display: isHorizontal ? 'flex' : 'block',
-            alignItems: isHorizontal ? 'stretch' : 'normal',
-            minHeight: isHorizontal ? '300px' : 'auto',
-            transition: 'all 0.5s ease'
+            alignItems: isHorizontal ? 'stretch' : 'normal'
           }}
         >
-          <style>{`
-            @keyframes glow {
-              from {
-                box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.2);
-              }
-              to {
-                box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), 0 0 100px rgba(0, 0, 0, 0.3);
-              }
-            }
-          `}</style>
-
           {/* Header Section */}
           <div 
             style={{
-              background: 'linear-gradient(135deg, #000000, #333333)',
-              padding: isHorizontal ? '20px' : '30px 20px',
+              background: '#111111',
+              padding: isHorizontal ? '16px' : '24px 16px',
               textAlign: 'center',
-              flex: isHorizontal ? '0 0 280px' : 'none',
+              flex: isHorizontal ? '0 0 260px' : 'none',
               display: isHorizontal ? 'flex' : 'block',
               flexDirection: 'column',
               justifyContent: 'center'
             }}
           >
-            <div style={{ marginBottom: isHorizontal ? '12px' : '16px' }}>
+            <div style={{ marginBottom: isHorizontal ? '10px' : '14px' }}>
               <img 
                 src={formData.photo} 
                 alt="Profile" 
                 style={{
-                  width: isHorizontal ? '100px' : '120px',
-                  height: isHorizontal ? '100px' : '120px',
+                  width: isHorizontal ? '90px' : '100px',
+                  height: isHorizontal ? '90px' : '100px',
                   borderRadius: '50%',
                   margin: '0 auto',
-                  border: '4px solid #ffffff',
-                  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+                  border: '3px solid #ffffff',
                   objectFit: 'cover',
                   display: 'block'
                 }}
               />
             </div>
             <h1 style={{
-              fontSize: isHorizontal ? '24px' : '28px',
+              fontSize: isHorizontal ? '20px' : '22px',
               fontWeight: 'bold',
               color: '#ffffff',
-              marginBottom: '8px',
               margin: 0
             }}>
               {formData.name}
             </h1>
             {formData.title && (
               <p style={{
-                fontSize: isHorizontal ? '16px' : '18px',
-                color: '#ffffff',
-                margin: '8px 0 0 0',
-                opacity: 0.8
+                fontSize: isHorizontal ? '13px' : '14px',
+                color: '#cccccc',
+                margin: '6px 0 0 0'
               }}>
                 {formData.title}
               </p>
@@ -441,54 +434,46 @@ END:VCARD`;
 
           {/* Contact Information Section */}
           <div style={{ 
-            padding: isHorizontal ? '20px' : '30px 25px',
+            padding: isHorizontal ? '16px' : '20px 16px',
             backgroundColor: '#000000',
-            flex: isHorizontal ? '1' : 'none',
-            display: isHorizontal ? 'flex' : 'block',
-            flexDirection: 'column',
-            justifyContent: 'center'
+            flex: isHorizontal ? '1' : 'none'
           }}>
             <div style={{ 
-              display: isHorizontal ? 'grid' : 'flex', 
-              gridTemplateColumns: isHorizontal ? '1fr 1fr' : 'none',
-              flexDirection: isHorizontal ? 'none' : 'column',
-              gap: isHorizontal ? '20px' : '15px'
+              display: 'flex', 
+              flexDirection: 'column',
+              gap: '12px'
             }}>
               {/* Phone */}
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '15px',
-                padding: '12px 0',
-                borderBottom: isHorizontal ? 'none' : '1px solid #333333',
-                transition: 'all 0.3s ease'
+                gap: '12px'
               }}>
                 <div style={{
-                  backgroundColor: '#ffffff',
-                  padding: '12px',
-                  borderRadius: '12px',
-                  minWidth: '48px',
-                  height: '48px',
+                  backgroundColor: '#1a1a1a',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  minWidth: '36px',
+                  height: '36px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <Phone size={20} color="#000000" />
+                  <Phone size={16} color="#ffffff" />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{
-                    fontSize: '12px',
-                    color: '#999999',
-                    marginBottom: '4px',
-                    textTransform: 'uppercase',
-                    fontWeight: '600'
+                    fontSize: '11px',
+                    color: '#666',
+                    marginBottom: '2px',
+                    textTransform: 'uppercase'
                   }}>
                     PHONE
                   </div>
                   <a 
                     href={`tel:${formData.phone}`} 
                     style={{
-                      fontSize: '18px',
+                      fontSize: '14px',
                       color: '#ffffff',
                       textDecoration: 'none',
                       fontWeight: '500'
@@ -503,30 +488,26 @@ END:VCARD`;
               <div style={{
                 display: 'flex',
                 alignItems: 'center',
-                gap: '15px',
-                padding: '12px 0',
-                borderBottom: isHorizontal ? 'none' : '1px solid #333333',
-                transition: 'all 0.3s ease'
+                gap: '12px'
               }}>
                 <div style={{
-                  backgroundColor: '#ffffff',
-                  padding: '12px',
-                  borderRadius: '12px',
-                  minWidth: '48px',
-                  height: '48px',
+                  backgroundColor: '#1a1a1a',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  minWidth: '36px',
+                  height: '36px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center'
                 }}>
-                  <Globe size={20} color="#000000" />
+                  <Globe size={16} color="#ffffff" />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{
-                    fontSize: '12px',
-                    color: '#999999',
-                    marginBottom: '4px',
-                    textTransform: 'uppercase',
-                    fontWeight: '600'
+                    fontSize: '11px',
+                    color: '#666',
+                    marginBottom: '2px',
+                    textTransform: 'uppercase'
                   }}>
                     WEBSITE
                   </div>
@@ -535,9 +516,9 @@ END:VCARD`;
                     target="_blank" 
                     rel="noopener noreferrer"
                     style={{
-                      fontSize: '16px',
+                      fontSize: '13px',
                       color: '#ffffff',
-                      textDecoration: 'underline',
+                      textDecoration: 'none',
                       fontWeight: '500'
                     }}
                   >
@@ -549,51 +530,46 @@ END:VCARD`;
               {/* Business */}
               <div style={{
                 display: 'flex',
-                alignItems: 'flex-start',
-                gap: '15px',
-                padding: '12px 0',
-                gridColumn: isHorizontal ? '1 / -1' : 'auto'
+                gap: '12px'
               }}>
                 <div style={{
-                  backgroundColor: '#ffffff',
-                  padding: '12px',
-                  borderRadius: '12px',
-                  minWidth: '48px',
-                  height: '48px',
+                  backgroundColor: '#1a1a1a',
+                  padding: '8px',
+                  borderRadius: '8px',
+                  minWidth: '36px',
+                  height: '36px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  marginTop: '4px'
+                  marginTop: '2px'
                 }}>
-                  <Building2 size={20} color="#000000" />
+                  <Building2 size={16} color="#ffffff" />
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{
-                    fontSize: '12px',
-                    color: '#999999',
+                    fontSize: '11px',
+                    color: '#666',
                     marginBottom: '4px',
-                    textTransform: 'uppercase',
-                    fontWeight: '600'
+                    textTransform: 'uppercase'
                   }}>
-                    BUSINESS
+                    BUSINESSES
                   </div>
                   <div style={{
-                    fontSize: isHorizontal ? '14px' : '16px',
+                    fontSize: '13px',
                     lineHeight: '1.5',
                     color: '#ffffff'
                   }}>
                     {formData.business.split(',').map((business, index) => (
-                      <span 
+                      <div 
                         key={index}
                         style={{ 
-                          display: 'block', 
-                          fontWeight: 'bold', 
-                          color: index % 2 === 0 ? '#cccccc' : '#ffffff',
-                          marginBottom: '4px'
+                          color: '#ffffff',
+                          marginBottom: '2px',
+                          fontSize: '13px'
                         }}
                       >
-                        {business.trim()}
-                      </span>
+                        • {business.trim()}
+                      </div>
                     ))}
                   </div>
                 </div>
@@ -604,92 +580,65 @@ END:VCARD`;
           {/* QR Code Section */}
           <div 
             style={{
-              backgroundColor: '#1f2937',
-              padding: '25px',
+              backgroundColor: '#111111',
+              padding: '16px',
               textAlign: 'center',
-              borderTop: isHorizontal ? 'none' : '2px solid #000000',
-              borderLeft: isHorizontal ? '2px solid #000000' : 'none',
-              flex: isHorizontal ? '0 0 200px' : 'none',
-              display: isHorizontal ? 'flex' : 'block',
+              borderTop: isHorizontal ? 'none' : '1px solid #333',
+              borderLeft: isHorizontal ? '1px solid #333' : 'none',
+              flex: isHorizontal ? '0 0 140px' : 'none',
+              display: 'flex',
               flexDirection: 'column',
-              justifyContent: 'center'
+              justifyContent: 'center',
+              alignItems: 'center'
             }}
           >
             <h3 style={{
-              fontSize: '16px',
+              fontSize: '12px',
               fontWeight: 'bold',
               color: '#ffffff',
-              marginBottom: '15px',
-              margin: 0
+              marginBottom: '10px',
+              margin: '0 0 10px 0'
             }}>
-              Scan to Save Contact
+              SCAN TO SAVE
             </h3>
             <div style={{
-              backgroundColor: 'white',
-              padding: '15px',
-              borderRadius: '12px',
+              backgroundColor: '#ffffff',
+              padding: '8px',
+              borderRadius: '8px',
               display: 'inline-block',
-              marginBottom: '15px'
+              marginBottom: '10px'
             }}>
               <canvas 
                 ref={qrCanvasRef}
-                width="120"
-                height="120"
+                width="90"
+                height="90"
                 style={{
-                  cursor: 'pointer',
                   display: 'block'
                 }}
               ></canvas>
             </div>
             
-            <div style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '8px'
-            }}>
-              <button 
-                onClick={createInteractiveCard}
-                style={{
-                  backgroundColor: '#000000',
-                  color: '#ffffff',
-                  border: 'none',
-                  padding: '10px 15px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px'
-                }}
-              >
-                <Download size={16} />
-                Save Contact
-              </button>
-              
-              <a 
-                href={`tel:${formData.phone}`}
-                style={{
-                  backgroundColor: '#10b981',
-                  color: '#ffffff',
-                  border: 'none',
-                  padding: '10px 15px',
-                  borderRadius: '8px',
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '6px',
-                  textDecoration: 'none'
-                }}
-              >
-                <Phone size={16} />
-                Call Now
-              </a>
-            </div>
+            <button 
+              onClick={createInteractiveCard}
+              style={{
+                backgroundColor: '#000000',
+                color: '#ffffff',
+                border: '1px solid #333',
+                padding: '6px 12px',
+                borderRadius: '6px',
+                fontSize: '11px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '4px',
+                width: '100%'
+              }}
+            >
+              <Download size={12} />
+              Save Contact
+            </button>
           </div>
         </div>
       </div>
@@ -697,34 +646,37 @@ END:VCARD`;
       {/* Action Buttons */}
       <div style={{
         display: 'flex',
-        gap: '15px',
+        gap: '12px',
         flexWrap: 'wrap',
         justifyContent: 'center',
-        padding: '20px',
-        backgroundColor: '#1a1a1a',
-        borderRadius: '15px',
-        border: '2px solid #333'
+        padding: '16px',
+        backgroundColor: '#111111',
+        borderRadius: '12px',
+        border: '1px solid #333',
+        maxWidth: '700px',
+        width: '100%'
       }}>
         <button 
           onClick={toggleLayout}
           style={{
-            backgroundColor: isHorizontal ? '#ef4444' : '#6366f1',
+            backgroundColor: isHorizontal ? '#dc2626' : '#2563eb',
             color: '#ffffff',
             border: 'none',
-            padding: '12px 20px',
-            borderRadius: '10px',
-            fontSize: '16px',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            fontSize: '14px',
             fontWeight: 'bold',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            minWidth: '180px'
+            gap: '6px',
+            flex: '1',
+            minWidth: '140px'
           }}
         >
-          <RotateCw size={18} />
-          {isHorizontal ? 'Switch to Vertical' : 'Switch to Horizontal'}
+          <RotateCw size={16} />
+          {isHorizontal ? 'Vertical' : 'Horizontal'}
         </button>
         
         <button 
@@ -733,20 +685,21 @@ END:VCARD`;
             backgroundColor: '#25D366',
             color: '#ffffff',
             border: 'none',
-            padding: '12px 20px',
-            borderRadius: '10px',
-            fontSize: '16px',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            fontSize: '14px',
             fontWeight: 'bold',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            minWidth: '180px'
+            gap: '6px',
+            flex: '1',
+            minWidth: '140px'
           }}
         >
-          <MessageCircle size={18} />
-          Share on WhatsApp
+          <MessageCircle size={16} />
+          Share
         </button>
         
         <button 
@@ -754,21 +707,22 @@ END:VCARD`;
           style={{
             backgroundColor: '#000000',
             color: '#ffffff',
-            border: 'none',
-            padding: '12px 20px',
-            borderRadius: '10px',
-            fontSize: '16px',
+            border: '1px solid #333',
+            padding: '10px 16px',
+            borderRadius: '8px',
+            fontSize: '14px',
             fontWeight: 'bold',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            gap: '8px',
-            minWidth: '180px'
+            gap: '6px',
+            flex: '1',
+            minWidth: '140px'
           }}
         >
-          <Edit3 size={18} />
-          Edit Card
+          <Edit3 size={16} />
+          Edit
         </button>
       </div>
     </div>
