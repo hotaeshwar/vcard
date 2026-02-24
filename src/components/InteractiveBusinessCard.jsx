@@ -34,8 +34,8 @@ const InteractiveBusinessCard = () => {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw QR code pattern
-    ctx.fillStyle = '#d4af37';
+    // Draw QR code pattern - changed to black
+    ctx.fillStyle = '#000000';
     const cellSize = canvas.width / 12;
     for (let i = 0; i < 12; i++) {
       for (let j = 0; j < 12; j++) {
@@ -162,7 +162,7 @@ END:VCARD`;
         }}>
           <div style={{
             backgroundColor: '#1f2937',
-            border: '2px solid #d4af37',
+            border: '2px solid #000000',
             borderRadius: '16px',
             padding: '24px',
             maxWidth: '500px',
@@ -179,7 +179,7 @@ END:VCARD`;
               <h2 style={{
                 fontSize: '18px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 margin: 0
               }}>
                 Edit Business Card
@@ -189,7 +189,7 @@ END:VCARD`;
                 style={{
                   backgroundColor: 'transparent',
                   border: 'none',
-                  color: '#d4af37',
+                  color: '#000000',
                   cursor: 'pointer',
                   padding: '4px'
                 }}
@@ -204,7 +204,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 marginBottom: '8px'
               }}>
                 Profile Photo
@@ -217,7 +217,7 @@ END:VCARD`;
                   width: '100%',
                   padding: '8px',
                   borderRadius: '8px',
-                  border: '1px solid #d4af37',
+                  border: '1px solid #000000',
                   backgroundColor: '#000000',
                   color: '#ffffff'
                 }}
@@ -230,7 +230,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 marginBottom: '8px'
               }}>
                 Name
@@ -243,7 +243,7 @@ END:VCARD`;
                   width: '100%',
                   padding: '8px',
                   borderRadius: '8px',
-                  border: '1px solid #d4af37',
+                  border: '1px solid #000000',
                   backgroundColor: '#000000',
                   color: '#ffffff'
                 }}
@@ -256,7 +256,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 marginBottom: '8px'
               }}>
                 Title
@@ -269,7 +269,7 @@ END:VCARD`;
                   width: '100%',
                   padding: '8px',
                   borderRadius: '8px',
-                  border: '1px solid #d4af37',
+                  border: '1px solid #000000',
                   backgroundColor: '#000000',
                   color: '#ffffff'
                 }}
@@ -282,7 +282,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 marginBottom: '8px'
               }}>
                 Phone
@@ -295,7 +295,7 @@ END:VCARD`;
                   width: '100%',
                   padding: '8px',
                   borderRadius: '8px',
-                  border: '1px solid #d4af37',
+                  border: '1px solid #000000',
                   backgroundColor: '#000000',
                   color: '#ffffff'
                 }}
@@ -308,7 +308,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 marginBottom: '8px'
               }}>
                 Website
@@ -321,7 +321,7 @@ END:VCARD`;
                   width: '100%',
                   padding: '8px',
                   borderRadius: '8px',
-                  border: '1px solid #d4af37',
+                  border: '1px solid #000000',
                   backgroundColor: '#000000',
                   color: '#ffffff'
                 }}
@@ -334,7 +334,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#d4af37',
+                color: '#000000',
                 marginBottom: '8px'
               }}>
                 Business
@@ -347,7 +347,7 @@ END:VCARD`;
                   width: '100%',
                   padding: '8px',
                   borderRadius: '8px',
-                  border: '1px solid #d4af37',
+                  border: '1px solid #000000',
                   backgroundColor: '#000000',
                   color: '#ffffff',
                   resize: 'vertical'
@@ -368,9 +368,9 @@ END:VCARD`;
         <div 
           style={{
             backgroundColor: '#000000',
-            border: '3px solid #d4af37',
+            border: '3px solid #000000',
             borderRadius: '20px',
-            boxShadow: '0 0 40px rgba(212, 175, 55, 0.4), 0 0 80px rgba(212, 175, 55, 0.2)',
+            boxShadow: '0 0 40px rgba(0, 0, 0, 0.4), 0 0 80px rgba(0, 0, 0, 0.2)',
             overflow: 'hidden',
             animation: 'glow 3s ease-in-out infinite alternate',
             display: isHorizontal ? 'flex' : 'block',
@@ -382,10 +382,10 @@ END:VCARD`;
           <style>{`
             @keyframes glow {
               from {
-                box-shadow: 0 0 30px rgba(212, 175, 55, 0.3), 0 0 60px rgba(212, 175, 55, 0.2);
+                box-shadow: 0 0 30px rgba(0, 0, 0, 0.3), 0 0 60px rgba(0, 0, 0, 0.2);
               }
               to {
-                box-shadow: 0 0 50px rgba(212, 175, 55, 0.5), 0 0 100px rgba(212, 175, 55, 0.3);
+                box-shadow: 0 0 50px rgba(0, 0, 0, 0.5), 0 0 100px rgba(0, 0, 0, 0.3);
               }
             }
           `}</style>
@@ -393,7 +393,7 @@ END:VCARD`;
           {/* Header Section */}
           <div 
             style={{
-              background: 'linear-gradient(135deg, #d4af37, #f1c40f)',
+              background: 'linear-gradient(135deg, #000000, #333333)',
               padding: isHorizontal ? '20px' : '30px 20px',
               textAlign: 'center',
               flex: isHorizontal ? '0 0 280px' : 'none',
@@ -411,7 +411,7 @@ END:VCARD`;
                   height: isHorizontal ? '100px' : '120px',
                   borderRadius: '50%',
                   margin: '0 auto',
-                  border: '4px solid #000000',
+                  border: '4px solid #ffffff',
                   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
                   objectFit: 'cover',
                   display: 'block'
@@ -421,7 +421,7 @@ END:VCARD`;
             <h1 style={{
               fontSize: isHorizontal ? '24px' : '28px',
               fontWeight: 'bold',
-              color: '#000000',
+              color: '#ffffff',
               marginBottom: '8px',
               margin: 0
             }}>
@@ -430,7 +430,7 @@ END:VCARD`;
             {formData.title && (
               <p style={{
                 fontSize: isHorizontal ? '16px' : '18px',
-                color: '#000000',
+                color: '#ffffff',
                 margin: '8px 0 0 0',
                 opacity: 0.8
               }}>
@@ -464,7 +464,7 @@ END:VCARD`;
                 transition: 'all 0.3s ease'
               }}>
                 <div style={{
-                  backgroundColor: '#d4af37',
+                  backgroundColor: '#ffffff',
                   padding: '12px',
                   borderRadius: '12px',
                   minWidth: '48px',
@@ -489,7 +489,7 @@ END:VCARD`;
                     href={`tel:${formData.phone}`} 
                     style={{
                       fontSize: '18px',
-                      color: '#d4af37',
+                      color: '#ffffff',
                       textDecoration: 'none',
                       fontWeight: '500'
                     }}
@@ -509,7 +509,7 @@ END:VCARD`;
                 transition: 'all 0.3s ease'
               }}>
                 <div style={{
-                  backgroundColor: '#d4af37',
+                  backgroundColor: '#ffffff',
                   padding: '12px',
                   borderRadius: '12px',
                   minWidth: '48px',
@@ -536,7 +536,7 @@ END:VCARD`;
                     rel="noopener noreferrer"
                     style={{
                       fontSize: '16px',
-                      color: '#d4af37',
+                      color: '#ffffff',
                       textDecoration: 'underline',
                       fontWeight: '500'
                     }}
@@ -555,7 +555,7 @@ END:VCARD`;
                 gridColumn: isHorizontal ? '1 / -1' : 'auto'
               }}>
                 <div style={{
-                  backgroundColor: '#d4af37',
+                  backgroundColor: '#ffffff',
                   padding: '12px',
                   borderRadius: '12px',
                   minWidth: '48px',
@@ -588,7 +588,7 @@ END:VCARD`;
                         style={{ 
                           display: 'block', 
                           fontWeight: 'bold', 
-                          color: index % 2 === 0 ? '#f1c40f' : '#d4af37',
+                          color: index % 2 === 0 ? '#cccccc' : '#ffffff',
                           marginBottom: '4px'
                         }}
                       >
@@ -607,8 +607,8 @@ END:VCARD`;
               backgroundColor: '#1f2937',
               padding: '25px',
               textAlign: 'center',
-              borderTop: isHorizontal ? 'none' : '2px solid #d4af37',
-              borderLeft: isHorizontal ? '2px solid #d4af37' : 'none',
+              borderTop: isHorizontal ? 'none' : '2px solid #000000',
+              borderLeft: isHorizontal ? '2px solid #000000' : 'none',
               flex: isHorizontal ? '0 0 200px' : 'none',
               display: isHorizontal ? 'flex' : 'block',
               flexDirection: 'column',
@@ -618,7 +618,7 @@ END:VCARD`;
             <h3 style={{
               fontSize: '16px',
               fontWeight: 'bold',
-              color: '#d4af37',
+              color: '#ffffff',
               marginBottom: '15px',
               margin: 0
             }}>
@@ -650,8 +650,8 @@ END:VCARD`;
               <button 
                 onClick={createInteractiveCard}
                 style={{
-                  backgroundColor: '#d4af37',
-                  color: '#000000',
+                  backgroundColor: '#000000',
+                  color: '#ffffff',
                   border: 'none',
                   padding: '10px 15px',
                   borderRadius: '8px',
@@ -752,8 +752,8 @@ END:VCARD`;
         <button 
           onClick={() => setIsEditing(true)}
           style={{
-            backgroundColor: '#d4af37',
-            color: '#000000',
+            backgroundColor: '#000000',
+            color: '#ffffff',
             border: 'none',
             padding: '12px 20px',
             borderRadius: '10px',
