@@ -34,7 +34,7 @@ const InteractiveBusinessCard = () => {
     ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Draw QR code pattern - changed to black
+    // Draw QR code pattern - black
     ctx.fillStyle = '#000000';
     const cellSize = canvas.width / 12;
     for (let i = 0; i < 12; i++) {
@@ -179,7 +179,7 @@ END:VCARD`;
               <h2 style={{
                 fontSize: '18px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 margin: 0
               }}>
                 Edit Business Card
@@ -189,7 +189,7 @@ END:VCARD`;
                 style={{
                   backgroundColor: 'transparent',
                   border: 'none',
-                  color: '#000000',
+                  color: '#ffffff',
                   cursor: 'pointer',
                   padding: '4px'
                 }}
@@ -204,7 +204,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 marginBottom: '8px'
               }}>
                 Profile Photo
@@ -230,7 +230,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 marginBottom: '8px'
               }}>
                 Name
@@ -256,7 +256,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 marginBottom: '8px'
               }}>
                 Title
@@ -282,7 +282,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 marginBottom: '8px'
               }}>
                 Phone
@@ -308,7 +308,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 marginBottom: '8px'
               }}>
                 Website
@@ -334,7 +334,7 @@ END:VCARD`;
                 display: 'block',
                 fontSize: '14px',
                 fontWeight: 'bold',
-                color: '#000000',
+                color: '#ffffff',
                 marginBottom: '8px'
               }}>
                 Business
@@ -694,7 +694,7 @@ END:VCARD`;
         </div>
       </div>
 
-      {/* Action Buttons - Now CLEARLY VISIBLE */}
+      {/* Action Buttons */}
       <div style={{
         display: 'flex',
         gap: '15px',
